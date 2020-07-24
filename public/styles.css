@@ -1,0 +1,42 @@
+body {
+    margin: 0;
+    font-family: 'Noto Sans', sans-serif;
+}
+
+#now-playing {
+    width: 420px;
+    display: flex;
+    background-color: #282828;
+}
+
+#image {
+    width: 100px;
+    height: 100px;
+}
+
+#info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px;
+    overflow: hidden;
+}
+
+#song,
+#artist {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#song {
+    color: #fff;
+    font-size: 18px;
+    font-weight: 700;
+    padding-bottom: 8px;
+}
+
+#artist {
+    color: #ccc;
+    font-size: 16px;
+}

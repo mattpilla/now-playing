@@ -1,0 +1,20 @@
+{
+    "name": "now-playing",
+    "version": "1.0.0",
+    "description": "Show currently playing song on Spotify, for live stream overlay",
+    "scripts": {
+        "start": "nodemon app"
+    },
+    "author": "Kaztalek",
+    "license": "ISC",
+    "devDependencies": {
+        "dotenv": "^8.2.0",
+        "nodemon": "^2.0.4"
+    },
+    "dependencies": {
+        "cors": "^2.8.5",
+        "express": "^4.17.1",
+        "querystring": "^0.2.0",
+        "uuid": "^8.2.0"
+    }
+}

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Now Playing</title>
+        <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="styles.css">
+        <link href="favicon.ico" type="image/x-icon" rel="icon">
+    </head>
+    <body>
+        <div id="app">
+            <div v-if="authenticated">
+                <div v-if="open" id="now-playing">
+                    <img :src="imageUrl" id="image">
+                    <div id="info">
+                        <span id="song">{{song}}</span>
+                        <span id="artist">{{artist}}</span>
+                    </div>
+                </div>
+            </div>
+            <div v-else>
+                <a href="/login">login</a>
+            </div>
+        </div>
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script src="main.js"></script>
+    </body>
+</html>
