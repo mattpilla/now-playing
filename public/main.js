@@ -3,18 +3,16 @@ new Vue({
     data: {
         authenticated: false,
         params: {},
-        open: false,
         imageUrl: '',
         song: '',
         artist: ''
     },
-    created() {
+    mounted() {
         this.params = this.getHashParams();
         if (this.params.access_token) {
             this.authenticated = true;
         }
-    },
-    mounted() {
+        history.replaceState({}, document.title, '.'); // remove hash from url
         window.setInterval(() => {
             this.getSong();
         }, 1000);
@@ -35,25 +33,25 @@ new Vue({
                 return;
             }
             try {
-                let response = await axios.get('https://api.spotify.com/v1/me/player/currently-playing', {
+                let res = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                     headers: {
                         Authorization: `Bearer ${this.params.access_token}`
                     }
                 });
-                if (response.status === 200) {
-                    this.open = true;
-                    let data = response.data.item;
+                if (res.status === 200) {
+                    let data = await res.json();
+                    data = data.item;
                     this.imageUrl = data.album.images[1].url;
                     this.song = data.name;
                     this.artist = data.artists[0].name;
-                } else if (response.status === 204) {
-                    this.open = false;
-                } else {
-                    this.open = false;
-                    console.error(response);
+                } else if (res.status !== 204) {
+                    console.error(res);
                 }
             } catch (e) {
-                console.error(e);
+                // TODO: check that error is that code expired
+                let res = await fetch(`/refresh?refresh_token=${this.params.refresh_token}`);
+                let data = await res.json();
+                this.params.access_token = data.access_token;
             }
         }
     },

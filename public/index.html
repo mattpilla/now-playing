@@ -11,7 +11,7 @@
     <body>
         <div id="app">
             <div v-if="authenticated">
-                <div v-if="open" id="now-playing">
+                <div v-if="song" id="now-playing">
                     <img :src="imageUrl" id="image">
                     <div id="info">
                         <span id="song">{{song}}</span>
@@ -24,7 +24,6 @@
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js"></script>
-        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
         <script src="main.js"></script>
     </body>
 </html>
