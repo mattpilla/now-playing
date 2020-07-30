@@ -2,17 +2,23 @@ new Vue({
     el: '#app',
     data: {
         authenticated: false,
-        params: {},
+        accessToken: '',
+        refreshToken: '',
         imageUrl: '',
         song: '',
         artist: ''
     },
-    mounted() {
-        this.params = this.getHashParams();
-        if (this.params.access_token) {
-            this.authenticated = true;
+    created() {
+        this.accessToken = localStorage.getItem('access_token');
+        this.refreshToken = localStorage.getItem('refresh_token');
+        if (!this.accessToken) {
+            this.setParams(this.getHashParams());
         }
+        this.authenticated = !!this.accessToken;
         history.replaceState({}, document.title, '.'); // remove hash from url
+        this.getSong();
+    },
+    mounted() {
         window.setInterval(() => {
             this.getSong();
         }, 1000);
@@ -28,6 +34,16 @@ new Vue({
             }
             return hashParams;
         },
+        setParams(data) {
+            if (data.access_token) {
+                this.accessToken = data.access_token;
+                localStorage.setItem('access_token', data.access_token);
+            }
+            if (data.refresh_token) {
+                this.refreshToken = data.refresh_token;
+                localStorage.setItem('refresh_token', data.refresh_token);
+            }
+        },
         async getSong() {
             if (!this.authenticated) {
                 return;
@@ -35,7 +51,7 @@ new Vue({
             try {
                 let res = await fetch('https://api.spotify.com/v1/me/player/currently-playing', {
                     headers: {
-                        Authorization: `Bearer ${this.params.access_token}`
+                        Authorization: `Bearer ${this.accessToken}`
                     }
                 });
                 if (res.status === 200) {
@@ -48,10 +64,12 @@ new Vue({
                     console.error(res);
                 }
             } catch (e) {
+                console.error(e);
                 // TODO: check that error is that code expired
-                let res = await fetch(`/refresh?refresh_token=${this.params.refresh_token}`);
+                let res = await fetch(`/refresh?refresh_token=${this.refreshToken}`);
                 let data = await res.json();
-                this.params.access_token = data.access_token;
+                this.setParams(data);
+                this.getSong();
             }
         }
     },
