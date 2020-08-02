@@ -60,16 +60,26 @@ new Vue({
                     this.imageUrl = data.album.images[1].url;
                     this.song = data.name;
                     this.artist = data.artists[0].name;
+                } else if (res.status === 401) {
+                    // token expired
+                    this.refresh();
                 } else if (res.status !== 204) {
                     console.error(res);
                 }
             } catch (e) {
                 console.error(e);
                 // TODO: check that error is that code expired
+                this.refresh();
+            }
+        },
+        async refresh() {
+            try {
                 let res = await fetch(`/refresh?refresh_token=${this.refreshToken}`);
                 let data = await res.json();
                 this.setParams(data);
                 this.getSong();
+            } catch (e) {
+                console.error(e);
             }
         }
     },
